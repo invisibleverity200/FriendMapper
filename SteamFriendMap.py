@@ -12,6 +12,7 @@ friendsSince = []
 key  = "14E4BBBB7373E80FE87DB063F31C46C5"
 threshold = 2
 autoThreshold = 1
+treshAvg = 0
 
 
 def parseFriends():
@@ -62,13 +63,25 @@ def mapFriends(layer, id):
                 if i >= 0:
                     overlapCount[i] += 1
                     mapFriends(layer+1,friend["steamid"])
+def calcAvg():
+    temp = 0
+    idx = 0
+    global treshAvg
+    for id in range(len(friendsLayerOne)):
+        if overlapCount[id] >= threshold:
+           temp += overlapCount[id]
+           idx += 1
+        else: break
+    treshAvg = temp / idx
 
 def mapToFile():
     jsObj = {}
     sort()
+    calcAvg()
     for id in range(len(friendsLayerOne)):
         if overlapCount[id] >= threshold:
-            jsObj[friendsLayerOne[id]] = overlapCount[id],datetime.fromtimestamp(int(friendsSince[id])).strftime('%d-%m-%Y %H:%M:%S')
+            jsObj[friendsLayerOne[id]] = overlapCount[id],datetime.fromtimestamp(int(friendsSince[id])).strftime('%d-%m-%Y %H:%M:%S'),(overlapCount[id] -treshAvg)
+        else: break
     json_obj = json.dumps(jsObj,indent=4)
 
     jsonFile = open("data.json", "w")
