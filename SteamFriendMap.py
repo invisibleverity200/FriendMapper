@@ -68,7 +68,7 @@ def mapToFile():
     sort()
     for id in range(len(friendsLayerOne)):
         if overlapCount[id] >= threshold:
-            jsObj[friendsLayerOne[id]] = overlapCount[id],datetime.utcfromtimestamp(int(friendsSince[id])).strftime('%Y-%m-%d %H:%M:%S')
+            jsObj[friendsLayerOne[id]] = overlapCount[id],datetime.fromtimestamp(int(friendsSince[id])).strftime('%d-%m-%Y %H:%M:%S')
     json_obj = json.dumps(jsObj,indent=4)
 
     jsonFile = open("data.json", "w")
